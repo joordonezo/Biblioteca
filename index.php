@@ -19,37 +19,66 @@
     </head>
 
     <?php
-        if(session_status() ==1){
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    echo '<br>';
+    function getBrowser($user_agent){
+
+if(strpos($user_agent, 'MSIE') !== FALSE)
+   return 'Internet explorer';
+ elseif(strpos($user_agent, 'Edge') !== FALSE) //Microsoft Edge
+   return 'Microsoft Edge';
+ elseif(strpos($user_agent, 'Trident') !== FALSE) //IE 11
+    return 'Internet explorer';
+ elseif(strpos($user_agent, 'Opera Mini') !== FALSE)
+   return "Opera Mini";
+ elseif(strpos($user_agent, 'Opera') || strpos($user_agent, 'OPR') !== FALSE)
+   return "Opera";
+ elseif(strpos($user_agent, 'Firefox') !== FALSE)
+   return 'Mozilla Firefox';
+ elseif(strpos($user_agent, 'Chrome') !== FALSE)
+   return 'Google Chrome';
+ elseif(strpos($user_agent, 'Safari') !== FALSE)
+   return "Safari";
+ else
+   return 'No hemos podido detectar su navegador';
+
+
+}
+
+
+$navegador = getBrowser($user_agent);
+ 
+echo "El navegador con el que estás visitando esta web es: ".$navegador;
+
+    if (session_status() == 1) {
         if (isset($_POST['formLogin']) && $_POST['formLogin'] == "enviado") {
             if ($_POST["usuario"] != null && $_POST["clave"] != null) {
-               
+
                 require_once 'scripts/db_conexion.php';
                 $db_conexion = new db_conexion();
-                $db_conexion->consultar("id, usuario, clave", "persona", "usuario", "=", "'".$_POST["usuario"]."' and clave = '".md5($_POST["clave"])."' and estado = ".TRUE."", TRUE);
-               
+                $db_conexion->consultar("id, usuario, clave", "persona", "usuario", "=", "'" . $_POST["usuario"] . "' and clave = '" . md5($_POST["clave"]) . "' and estado = " . TRUE . "", TRUE);
+
                 while ($row = mysqli_fetch_array($GLOBALS['consultar'])) {
                     $id = $row[0];
                     $usu = $row[1];
                     $clave = $row[2];
                 }
-                if(isset($id) && $id !=""){
-                session_start();
-                $_SESSION['id'] = $id;
+                if (isset($id) && $id != "") {
+                    session_start();
+                    $_SESSION['id'] = $id;
                     header("Location: dir_/home.php");
                 }
-                if($usu == "" || $usu != $_POST["usuario"] || $clave == "" || $clave != md5($_POST["clave"])){
-                    
+                if ($usu == "" || $usu != $_POST["usuario"] || $clave == "" || $clave != md5($_POST["clave"])) {
                     ?>
                     <div class="alert alert-warning has col-xs-4 col-xs-offset-4"><strong>Incorrectos!</strong> Usuario o 
                         contraseña</div>
                     <?php
-                    } else {
-                if(isset($id) && $id !=""){
-                session_start();
-                $_SESSION['id'] = $id;
-                    header("Location: dir_/home.php");
-                }
-                    
+                } else {
+                    if (isset($id) && $id != "") {
+                        session_start();
+                        $_SESSION['id'] = $id;
+                        header("Location: dir_/home.php");
+                    }
                 }
             } else {
                 ?>
@@ -82,9 +111,9 @@
                 <label class="control-label">Copyright <span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span> 2015. By Jorge Luis</label>
             </div>
         </div>
-    
+
     </html>
     <?php
-        }else{
-            header("Location: dir_/home.php");
-        }
+} else {
+    header("Location: dir_/home.php");
+}

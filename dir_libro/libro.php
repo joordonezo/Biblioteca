@@ -23,6 +23,8 @@ if(isset($_POST['form']) && $_POST['form'] == "env"){
         $pa_cla = $row1['palabras_clave'];
         $mod = $row1['modalidad'];
         
+        echo 'hello word';
+        
     }
      if (isset($id) && $id != "") {
         ?>
